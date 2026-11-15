@@ -1,0 +1,31 @@
+name: セキュリティ機能
+description: IEC 62443-4-2 の要件に関わる機能の追加・変更
+labels: []
+body:
+  - type: textarea
+    id: goal
+    attributes:
+      label: 実現したいこと
+      description: 何を、どのインタフェースで、誰から守るか
+    validations:
+      required: true
+  - type: dropdown
+    id: mode
+    attributes:
+      label: モード
+      description: 新しい外部インタフェース、鍵、更新経路に触れるなら standard
+      options:
+        - lite
+        - standard
+    validations:
+      required: true
+  - type: input
+    id: cr
+    attributes:
+      label: 該当しそうな CR (分かれば)
+      placeholder: "例: CR 1.1, CR 2.1"
+  - type: textarea
+    id: constraints
+    attributes:
+      label: 制約
+      description: 制御周期、メモリ、互換性、機能安全との関係など
