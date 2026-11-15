@@ -105,6 +105,29 @@ GitHub 上で Copilot に issue を割り当てて動かす場合は、「セキ
 - 承認、押印、レビュー会議など、エージェントが用意できないものは PR に人への依頼として挙がる。
 - 規定を git で管理するかどうかは `init` で選ぶ。このリポジトリのような公開の場所には置かない。Word、Excel、PDF のままでは読めないことがあるので、テキストに変換して渡す。
 
+## チケットの置き場所 (GitHub / Redmine)
+
+GitHub を使えない環境では、Redmine のチケットを issue の代わりに使える。適用先の `.sec62443/project.yml` の `tracker` で切り替える。
+
+| `tracker` | チケット | まとめの出し先 |
+|---|---|---|
+| `github` (既定) | GitHub の issue | PR |
+| `redmine` | Redmine のチケット | PR があれば PR とチケットのコメント、なければチケットのコメント |
+| `manual` | 利用者が本文を貼って渡す | `.sec62443/outbox/` のファイル (利用者が転記する) |
+
+Redmine を使う準備:
+
+1. Redmine の管理者に REST API を有効にしてもらう (管理 > 設定 > API)。
+2. 自分の API キー (個人設定のページに表示される) を、環境変数 `REDMINE_API_KEY` に自分で設定する。キーを設定ファイルやチャットに書かない。エージェントはキーを尋ねず、道具が環境変数から読む。
+3. `project.yml` に `tracker: redmine`、`redmine_url`、`redmine_project` (プロジェクト識別子) を書く。
+4. `python tools/redmine.py list` でチケットの一覧が出れば準備完了。
+5. チケットの説明欄に `工程: spec`、`モード: standard` のように書くと、その工程とモードで動く。この書式を Redmine のチケットの雛形にしておくとよい。
+
+- コミットメッセージには `refs #<チケット番号>` が入る。Redmine がリポジトリと連携していれば、チケットに履歴が付く。チケットを閉じるのは人。
+- 社内の認証局の証明書を使っている場合は、環境変数 `SSL_CERT_FILE` に証明書のファイルを指定する。プロキシは `HTTPS_PROXY` に従う。
+- REST API を有効にできない、端末から Redmine に届かない、という場合は `tracker: manual` にする。
+- 道具の確認は模擬サーバーで行っている (`python -m unittest tools/test_redmine.py`)。本物の Redmine での確認は、導入先で行う必要がある。
+
 ## 過去資産の参照 (任意)
 
 以前のプロジェクトや別機種の仕様書、設計書、ソースコード、テスト結果、不具合の記録を、索引を通して必要な分だけ読ませる。資産は元の場所に置いたままで、コピーしない。
@@ -191,6 +214,7 @@ CLAUDE.md                         AGENTS.md を取り込むだけ
 .claude/skills/iec62443/          Claude Code 用の入口 (本体を指すだけ)
 .claude/agents/                   Claude Code 用のエージェント (生成)
 tools/sync_agents.py              .github/ から .claude/ を生成する
+tools/redmine.py                  Redmine のチケットを読み書きする (tracker: redmine のとき)
 docs/organization.md              組織図、スキルの割当て、シーケンス図
 docs/guide.md                     このガイド
 ```
@@ -198,7 +222,7 @@ docs/guide.md                     このガイド
 適用先のプロジェクトで `init` を実行すると作られるもの:
 
 ```
-.sec62443/project.yml             目標 SL、製品種別、言語、ツール
+.sec62443/project.yml             目標 SL、製品種別、言語、ツール、チケットの置き場所
 .sec62443/rules.md                プロジェクト固有ルール (改善ループで育つ)
 .sec62443/lessons.md              学びの記録
 .sec62443/standards/              規格本文の抜粋 (任意、git 管理外)

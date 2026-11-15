@@ -25,6 +25,7 @@ IEC 62443-4-1 のプロセスで 4-2 の要件を満たす組込みソフト (�
 | 以前の機種の資料を参照させる | `/iec62443 prior add <フォルダ> <機種名>` |
 | 社内規定を守らせる | `/iec62443 org-rules add <ファイル> 部` |
 | リリース前に不足を洗い出す | `/iec62443 audit` |
+| GitHub の代わりに Redmine のチケットで進める | `project.yml` に `tracker: redmine` ([詳細](docs/guide.md#チケットの置き場所-github--redmine)) |
 
 全部の一覧: **[逆引き辞典](.github/skills/iec62443/references/howto.md)**
 
@@ -50,4 +51,4 @@ IEC 62443-4-1 のプロセスで 4-2 の要件を満たす組込みソフト (�
 - [組織図とシーケンス図](docs/organization.md): 誰が何を読み、どの順で動くか
 - [詳細ガイド](docs/guide.md): 工程、モード、SL の切替、規格・規定・過去資産の参照、構成、導入
 
-開発は issue を起票し、`feature/<issue番号>-<要約>` ブランチで PR を出す。
+このリポジトリ自体の開発は issue を起票し、`feature/<issue番号>-<要約>` ブランチで PR を出す。
