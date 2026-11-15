@@ -6,11 +6,26 @@ IEC 62443-4-1 の開発プロセスに沿って、IEC 62443-4-2 のコンポー�
 
 ## 使い方
 
-| 操作 | Claude Code | GitHub Copilot (VS Code) |
-|---|---|---|
-| 初期設定 | `/iec62443 init` | `/iec62443` に `init` |
-| issue を実装 | `/iec62443 12` または `/iec62443 standard 12` | `/iec62443` に `standard 12` |
-| 改善提案 | `/iec62443 improve` | `/iec62443` に `improve` |
+Claude Code でも GitHub Copilot (VS Code のエージェントモード) でも、チャットで同じコマンドを使う。
+
+| 操作 | コマンド |
+|---|---|
+| 初期設定 | `/iec62443 init` |
+| issue を実装 | `/iec62443 12` または `/iec62443 standard 12` |
+| 改善提案 | `/iec62443 improve` |
+| 独立レビュー | エージェント `sec-reviewer` を選ぶ (standard では自動で呼ばれる) |
+
+GitHub 上で Copilot に issue を割り当てて動かす場合は、「セキュリティ機能」テンプレートで起票する。issue に書かれたモードで同じ手順が動く。
+
+### ツールごとの読込み先
+
+| | Claude Code | Copilot (VS Code) | Copilot (GitHub 上) |
+|---|---|---|---|
+| 常時指示 | `CLAUDE.md` → `AGENTS.md` | `AGENTS.md` | `AGENTS.md` |
+| スキル | `.claude/skills/` (本体への入口) | `.github/skills/` (本体) | 両方 |
+| エージェント | `.claude/agents/` | `.github/agents/` | `.github/agents/` |
+
+手順の本体は `.github/skills/iec62443/` の 1 か所だけで、ほかは本体を指す数行のファイル。修正は本体に対して行う。
 
 ## モード
 
@@ -25,9 +40,11 @@ IEC 62443-4-1 の開発プロセスに沿って、IEC 62443-4-2 のコンポー�
 ```
 AGENTS.md                         両ツール共通の常時指示 (数行)
 CLAUDE.md                         AGENTS.md を取り込むだけ
-.claude/skills/iec62443/          スキル本体。SKILL.md と、モードに応じて読む references/
-.claude/agents/sec-reviewer.md    独立レビュー用エージェント
-.github/                          Copilot 用の薄いラッパー、issue / PR テンプレート
+.github/skills/iec62443/          スキル本体。SKILL.md と、モードに応じて読む references/
+.github/agents/                   Copilot 用の独立レビューエージェント
+.github/ISSUE_TEMPLATE/ ほか      issue / PR テンプレート
+.claude/skills/iec62443/          Claude Code 用の入口 (本体を指すだけ)
+.claude/agents/                   Claude Code 用の独立レビューエージェント
 ```
 
 適用先のプロジェクトで `init` を実行すると作られるもの:

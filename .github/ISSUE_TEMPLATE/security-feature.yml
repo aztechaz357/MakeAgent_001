@@ -13,7 +13,7 @@ body:
     id: mode
     attributes:
       label: モード
-      description: 新しい外部インタフェース、鍵、更新経路に触れるなら standard
+      description: 新しい外部インタフェース、鍵、更新経路に触れるなら standard。Copilot に issue を割り当てた場合もこのモードで動く
       options:
         - lite
         - standard
