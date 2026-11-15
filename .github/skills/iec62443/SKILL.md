@@ -1,71 +1,67 @@
 ---
 name: iec62443
-description: IEC 62443-4-1 の開発プロセスに沿って 4-2 のコンポーネント要件 (CR) を満たす組込みソフトを開発する。要求仕様書、アーキテクチャ設計書、機能仕様書、ソフトウェア設計書の作成、テスト先行 (TDD) の実装、単体・統合・システム試験、文書間の整合確認を issue 単位で行う。インバータ、サーボアンプ、PLC などの認証、認可、通信保護、暗号、監査ログ、ファーム更新、入力検証、設定保護に関わる作業で使う。
-argument-hint: "[lite|standard|audit] [req|arch|spec|design|code|it|st] <issue番号> | reverse <対象> | reconcile | org-rules add <ファイル> | init | improve"
+description: IEC 62443-4-1 の開発プロセスに沿って 4-2 の要件を満たす組込みソフトを開発するための入口。利用者 (設計者) と対話し、要求分析、文書作成、テスト設計、実装、テスト、レビューの各エージェントに仕事を割り振る。インバータ、サーボアンプ、PLC などのセキュリティ機能 (認証、認可、通信保護、暗号、監査ログ、ファーム更新、入力検証、設定保護) の作業で使う。
+argument-hint: "[lite|standard|audit] [req|arch|spec|design|code|it|st] <issue番号> | <エージェント名> <依頼> | reverse <対象> | reconcile | org-rules add <ファイル> | init | improve"
 ---
 
-# iec62443
+# iec62443: オーケストレーターの手順
 
-引数: `[モード] [工程] <issue番号>`、またはサブコマンド。モード省略時は `.sec62443/project.yml` の `default_mode`、工程省略時は issue に書かれた工程、それもなければ `code`。
+これを読んだあなたがオーケストレーターとして動く。利用者 (設計者兼マネジメント) との窓口になり、作業は担当エージェントをサブエージェントとして呼んで任せる。自分では成果物を書かない。
 
-issue に割り当てられて起動した場合 (GitHub Copilot のクラウドエージェントなど) は、その issue 番号と、issue に書かれたモードと工程を引数として扱う。
+**自分の文脈に入れてよいもの**: issue、`.sec62443/project.yml`、トレース表の該当行、各エージェントの報告。文書の本文、コード、ほかのスキルは読まない (担当エージェントが読む)。
 
-読むファイルはこの文書で指定されたものだけにする。文書や規定は該当する項目だけを読み、全体を読まない。
+## 引数
 
-GitHub の操作 (issue の読取り、コメント、PR) は、その環境で使える手段で行う: `gh` コマンド、GitHub 用のツール、またはエージェントに最初から与えられている issue と PR。どれでもできない操作は省略せず、PR の説明に同じ内容を書く。
+`[モード] [工程] <issue番号>`、`<エージェント名> <依頼>`、またはサブコマンド。モード省略時は project.yml の `default_mode`、工程省略時は issue に書かれた工程、それもなければ `code`。issue に割り当てられて起動した場合は、その issue の番号、モード、工程を使う。
 
-## サブコマンド
+GitHub の操作 (issue、コメント、PR) は、その環境で使える手段で行う: `gh` コマンド、GitHub 用のツール、または最初から与えられている issue と PR。できない操作は PR の説明に同じ内容を書く。
 
-| 引数 | 内容 | 読む参照 |
+## 割り振り
+
+| 引数 | 順に呼ぶエージェント (作成) | レビュー (standard のみ) |
 |---|---|---|
-| `init` | `.sec62443/` と文書の雛形を作る | [init.md](references/init.md) |
-| `reverse <ファイルや機能>` | 既にあるコードから設計と仕様を起こす | [flex.md](references/flex.md) の「コード先行」 |
-| `reconcile [issue番号]` | 文書、テスト、コードのつじつまを合わせる | [flex.md](references/flex.md) の「整合」 |
-| `org-rules add <ファイル> [社\|部\|課]` | 社内規定を索引に登録する | [org-rules.md](references/org-rules.md) |
-| `improve` | 学びからスキルと固有ルールの改善を提案する | [improve.md](references/improve.md) |
+| `req` | req-analyzer → test-designer (ST) | req-reviewer、test-design-reviewer |
+| `arch` | req-analyzer (standard のみ: 脅威分析) → doc-writer (ARC) → test-designer (IT) | doc-reviewer、test-design-reviewer |
+| `spec` | doc-writer (FS) → test-designer (ST、IT) | doc-reviewer、test-design-reviewer |
+| `design` | doc-writer (SWD) → test-designer (UT、IT) | doc-reviewer、test-design-reviewer |
+| `code` | test-designer (UT がないときだけ) → coder → tester | code-reviewer、test-reviewer |
+| `it` / `st` | test-designer (仕様がないときだけ) → tester | test-reviewer |
+| `reverse <対象>` | doc-writer (逆生成) → coder (今の振る舞いを固定するテスト) → reconciler | doc-reviewer |
+| `reconcile [issue]` | reconciler → (承認された修正を各担当へ) → reconciler | — |
+| `audit` | auditor | — |
+| `org-rules add …` | librarian | — |
+| `improve` | improver | — |
+| `<エージェント名> <依頼>` | そのエージェントだけ。前後の工程もレビューも行わない | — |
+| `init` | 自分で [references/init.md](references/init.md) に従う | — |
 
-## 工程
+文書の工程では、作成者の項目を受けて test-designer がテストを設計し、テストが書けない項目があれば作成者に戻す。`code` ではテスト仕様が先にあり、coder がそれをテストコードにしてから実装する。
 
-どの工程からでも始めてよい。上流の文書がない、足りない、間違っている場合も止まらず、手順 3 のとおり記録して進める。
+lite で始めても、新しい外部インタフェース、鍵や認証情報、ファーム更新経路、信頼境界をまたぐデータの新設に当たると分かったら、standard を利用者に提案する。
 
-| 工程 | 作るもの (ID) | 先に作るテスト (ID) | 4-1 |
-|---|---|---|---|
-| `req` | 製品セキュリティ要求仕様書 (REQ) | システム試験仕様 (ST) | SR |
-| `arch` | 製品セキュリティアーキテクチャ設計書 (ARC) | 統合テスト仕様 (IT) | SR, SD |
-| `spec` | 機能仕様書 (FS) | システム試験仕様 (ST)、統合テスト仕様 (IT) | SD |
-| `design` | ソフトウェア設計書 (SWD) | 単体テスト仕様 (UT)、統合テスト仕様 (IT) | SD |
-| `code` | ソースコード | 単体テストのコード | SI, SVV |
-| `it` | 統合テストの実施と結果 | — | SVV |
-| `st` | システム試験の実施と結果 | — | SVV |
+## 進め方
 
-文書の名称と場所は project.yml の `docs` に従う。工程ごとの詳細は [stages.md](references/stages.md) の該当する節だけを読む。
+1. **準備**: issue と project.yml を読む。トレース表から関係する行だけを拾う。作業ブランチが与えられていればそれを使い、なければ `feature/<番号>-<要約>` を作る。
+2. **計画の確認**: 呼ぶエージェントと順番、利用者に決めてほしいことを 5 行以内で示す。設計上の選択は利用者が決める。決定を待たずに進められる部分は進める。
+3. **依頼**: エージェントを 1 つずつ呼ぶ。依頼には次だけを書く。
+   ```
+   issue: #34 / モード: standard / 工程: spec
+   対象: FS (新規)、上流 REQ-003, REQ-004、CR 1.11
+   利用者の決定: 失敗 5 回でロック、解除は管理者操作
+   前の担当からの引継ぎ: (報告の「依頼・質問」「未整合」から関係する行だけ)
+   求めるもの: FS の項目作成、トレース表の更新、報告
+   ```
+   成果物の中身は渡さない。ID とファイルの場所で渡す。
+4. **報告の受取り**: 報告の「依頼・質問」は、自分で答えられるもの (既に決まっていること) は答えて再依頼し、設計上の判断はまとめて利用者に聞く。
+5. **レビュー** (standard): 作成者とは別のエージェントに依頼する。`要修正` なら指摘を作成者に渡して直させ、同じ reviewer に再レビューさせる。2 往復で収束しなければ利用者に判断を求める。
+6. **まとめ**: PR を作る (既にあれば説明を更新)。`.github/pull_request_template.md` の項目を、各報告から埋める。利用者へは、できたこと、未整合、未検証、人に頼むことを短く伝える。
 
-## モード
+## サブエージェントを呼べない環境
 
-| モード | 用途 | 違い |
-|---|---|---|
-| lite | 日常の作業。消費を最小にする | 手順 7 を省く。規定は索引の要点だけ。テスト技法は同値分割、境界値、拒否される側 |
-| standard | 新規のセキュリティ機能、外部インタフェースの追加・変更 | 全手順。[standard.md](references/standard.md) の脅威分析、該当する技法すべて、規定の本文、[profiles.md](references/profiles.md) の該当製品の節 |
-| audit | リリース前や審査前の棚卸し。成果物は変更しない | [audit.md](references/audit.md) の手順のみ |
-
-lite で始めても、次のどれかに当たると分かった時点で standard を提案して確認を取る: 新しい外部インタフェース、鍵や認証情報の扱い、ファーム更新経路、信頼境界をまたぐデータの新設。
-
-## 手順 (全工程で共通)
-
-1. **準備**: issue を読む (既に文脈にあれば読み直さない)。`.sec62443/project.yml` と `.sec62443/rules.md` を読む。作業ブランチが環境から与えられていればそれを使い、なければ `feature/<番号>-<要約>` を作る。
-2. **規定**: project.yml の `org_rules_dir` が空でなければ、[org-rules.md](references/org-rules.md) に従い、この工程に当てはまる社内規定と様式を確認する。
-3. **上流の確認**: `docs/security/trace.csv` で、この作業の上流にあたる項目を探し、その項目だけを読む。上流がない、足りない、矛盾する場合は [flex.md](references/flex.md) の「進め方」に従って記録し、仮定を置いて進める。
-4. **要件との対応**: [cr-map.md](references/cr-map.md) から該当 CR を選び、`standard_docs` が空でなければ [standards.md](references/standards.md) に従って本文も読む。`target_sl` で必要な RE まで含める。`rules.md` や issue に SL の例外や対象外の指定があればそれに従い、自分の判断で SL を下げたり CR を外したりしない。
-5. **テストを先に作る**: [test-design.md](references/test-design.md) に従い、この工程で対になるテストを成果物より先に書く。`code` では単体テストが失敗することを確認してから実装する。
-6. **成果物**: stages.md の該当する節に従って作る。様式が登録されていればそれに合わせる。`code` では手順 5 のテストを通す。
-7. **独立レビュー** — standard のみ: エージェント `sec-reviewer` をサブエージェントとして呼び、差分を渡して指摘を反映する。呼べない環境では PR に「独立レビュー未実施」と書き、人または `sec-reviewer` によるレビューを依頼する。自分でレビューして済ませない。
-8. **トレース**: `docs/security/trace.csv` に、作った項目ごとに 1 行追記または更新する (列は init.md)。変更した項目の下流にあたる行は状態を `要見直し` にする。
-9. **PR と学び**: `.github/pull_request_template.md` の項目を埋めて PR を作る (既にあれば説明を更新する)。手順どおりに進まなかった点、固有の事情で判断した点があれば `.sec62443/lessons.md` に 1 行追記する。なければ書かない。
+呼べない場合は、上の表の順に 1 役ずつ自分で行う。役を切り替えるたびに、その役のエージェント定義 (`.github/agents/<名前>.agent.md`) に書かれたスキルだけを読む。レビューは自分で済ませず、PR に「独立レビュー未実施」と書いて人または reviewer エージェントによるレビューを依頼する。
 
 ## 守ること
 
-- 4-2 の適合を断定しない。「この項目のテストが通った」「未検証」のように根拠で述べる。
-- cr-map.md は独自要約で、規格原本との照合が済んでいない項目がある。SL の割当が判断を左右するときは、原本の確認を人に依頼する。
-- セキュリティ機能を弱める変更 (認証の省略、検証の無効化、デバッグ用バックドア) は、issue に明示の承認がない限り行わない。
-- 上流の文書に項目を足したり直したりしてよいが、状態は `仮` にとどめる。`確定` にするのは人。
-- 未整合を隠さない。テストや文書を現状のコードに合わせて書き換えて済ませず、相違として記録する。
+- 利用者の決定なしに設計上の選択を確定させない。
+- 報告にない成果を利用者に伝えない。未実施の試験を合格と伝えない。
+- 未整合 (`docs/security/gaps.md`) と未検証を、毎回のまとめに必ず含める。
+- 項目を `確定` にするのは人。

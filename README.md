@@ -17,19 +17,48 @@ Claude Code でも GitHub Copilot (VS Code のエージェントモード) で�
 | 文書、テスト、コードを整合させる | `/iec62443 reconcile` |
 | 社内規定を登録 | `/iec62443 org-rules add 設計規定.md 部` |
 | 改善提案 | `/iec62443 improve` |
-| 独立レビュー | エージェント `sec-reviewer` を選ぶ (standard では自動で呼ばれる) |
+| 1 つのエージェントだけに任せる | `/iec62443 code-reviewer src/auth.c を見て`、またはエージェントを直接選ぶ |
 
 GitHub 上で Copilot に issue を割り当てて動かす場合は、「セキュリティ機能」テンプレートで起票する。issue に書かれたモードと工程で同じ手順が動く。
+
+`/iec62443` を受けたエージェントがオーケストレーターとして動き、担当エージェントに仕事を割り振る。GitHub Copilot ではエージェント `orchestrator` を選んでも同じ。Claude Code では、サブエージェントは別のサブエージェントを呼べないので、`/iec62443` を通常の会話で使うか、`claude --agent orchestrator` で起動する。
 
 ### ツールごとの読込み先
 
 | | Claude Code | Copilot (VS Code) | Copilot (GitHub 上) |
 |---|---|---|---|
 | 常時指示 | `CLAUDE.md` → `AGENTS.md` | `AGENTS.md` | `AGENTS.md` |
-| スキル | `.claude/skills/` (本体への入口) | `.github/skills/` (本体) | 両方 |
-| エージェント | `.claude/agents/` | `.github/agents/` | `.github/agents/` |
+| 入口のスキル | `.claude/skills/iec62443/` (本体を指す) | `.github/skills/iec62443/` | 両方 |
+| 役割別のスキル | `.github/skills/sec-*/` をパスで読む | `.github/skills/sec-*/` | `.github/skills/sec-*/` |
+| エージェント | `.claude/agents/` (生成) | `.github/agents/` | `.github/agents/` |
 
-手順の本体は `.github/skills/iec62443/` の 1 か所だけで、ほかは本体を指す数行のファイル。修正は本体に対して行う。
+定義の元は `.github/` の 1 か所だけ。`.claude/` 側は `python tools/sync_agents.py` で生成するので、直接は編集しない。
+
+## エージェントの組織
+
+役割ごとにエージェントを分け、それぞれが自分の役割に要るスキルだけを読む。組織図、スキルの割当て、作業のシーケンス図は [docs/organization.md](docs/organization.md) にある。
+
+| 区分 | エージェント | 役割 |
+|---|---|---|
+| 統率 | orchestrator | 利用者 (設計者兼マネジメント) との窓口。計画し、担当に依頼し、報告をまとめる。成果物は書かない |
+| 作成 | req-analyzer | 該当 CR の選定、脅威分析、要求の不備の洗い出し、要求仕様書 |
+| | doc-writer | アーキテクチャ設計書、機能仕様書、ソフトウェア設計書、コードからの逆生成 |
+| | test-designer | 単体、統合、システム試験のテスト仕様 |
+| | coder | テストコードと実装 |
+| | tester | テストの実施と結果の記録、実機試験の手順書 |
+| レビュー | req-reviewer、doc-reviewer、test-design-reviewer、code-reviewer、test-reviewer | 上の 5 つをそれぞれ、作成者から独立して確認する。成果物は変更しない |
+| 支援 | reconciler | 文書、テスト、コードのつじつま合わせ |
+| | auditor | リリース前の棚卸し |
+| | librarian | 社内規定の登録と索引の管理 |
+| | improver | 学びからの改善提案 |
+
+文脈を小さく保つ仕組み:
+
+- オーケストレーターは文書やコードの中身を読まず、ID、ファイルの場所、各担当の報告 (10 行以内) だけを扱う。
+- 各担当は、共通の `sec-base` と自分の役割のスキルだけを読む。ほかの役割のスキルは開かない。
+- 成果物はファイルで受け渡し、依頼と報告には中身を貼らない。
+
+エージェントに追加のスキルを読ませたいときは、`.sec62443/project.yml` の `agent_skills` に書く (プロジェクト単位)。全体の割当てを変える方法は [docs/organization.md](docs/organization.md) の「割当てを変える」を参照。
 
 ## 開発の流れ
 
@@ -80,8 +109,8 @@ GitHub 上で Copilot に issue を割り当てて動かす場合は、「セキ
 
 | モード | 用途 | 消費 |
 |---|---|---|
-| lite (既定) | 日常の作業。指定した工程だけを行い、規定は索引の要点だけを見る | 小 |
-| standard | 新規のセキュリティ機能や外部インタフェースの変更。脅威分析、該当するテスト技法すべて、規定の本文、独立レビューを追加 | 中 |
+| lite (既定) | 日常の作業。作成の担当だけを呼び、レビュー担当は呼ばない。規定は索引の要点だけを見る | 小 |
+| standard | 新規のセキュリティ機能や外部インタフェースの変更。脅威分析、該当するテスト技法すべて、規定の本文、各 reviewer による独立レビューを追加 | 中 |
 | audit | リリース前の棚卸し。未整合、CR の充足状況、4-1 の証跡の不足を一覧にする | 大 |
 
 ## 目標セキュリティレベル (SL) の切替
@@ -138,11 +167,14 @@ target_sl: 1   # 1〜4。SL1 でよければ 1、SL2 が必要なら 2 (既定)
 ```
 AGENTS.md                         両ツール共通の常時指示 (数行)
 CLAUDE.md                         AGENTS.md を取り込むだけ
-.github/skills/iec62443/          スキル本体。SKILL.md と、モードに応じて読む references/
-.github/agents/                   Copilot 用の独立レビューエージェント
+.github/skills/iec62443/          入口のスキル (オーケストレーターの手順)
+.github/skills/sec-*/             役割別のスキル (共通、要求、文書、テスト設計、実装、テスト実施、レビュー、整合、規定、監査、改善)
+.github/agents/                   エージェントの定義 (元)
 .github/ISSUE_TEMPLATE/ ほか      issue / PR テンプレート
 .claude/skills/iec62443/          Claude Code 用の入口 (本体を指すだけ)
-.claude/agents/                   Claude Code 用の独立レビューエージェント
+.claude/agents/                   Claude Code 用のエージェント (生成)
+tools/sync_agents.py              .github/ から .claude/ を生成する
+docs/organization.md              組織図、スキルの割当て、シーケンス図
 ```
 
 適用先のプロジェクトで `init` を実行すると作られるもの:
@@ -166,7 +198,7 @@ docs/security/*.md, test/*.md     各工程を最初に実行したときに作�
 
 ## 適用先への導入
 
-現時点では手動 (自動化は issue #5)。`AGENTS.md`、`CLAUDE.md`、`.claude/`、`.github/` を適用先にコピーし、`init` を実行する。
+現時点では手動 (自動化は issue #5)。`AGENTS.md`、`CLAUDE.md`、`.claude/`、`.github/`、`tools/` を適用先にコピーし、`init` を実行する。
 
 ## 開発
 
