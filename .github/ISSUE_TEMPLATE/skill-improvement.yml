@@ -1,0 +1,21 @@
+name: スキル改善
+description: 適用して分かったスキル・エージェントの改善点
+labels: ["improvement-loop"]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: 起きたこと
+      description: どのモード、どの工程で、何が期待と違ったか
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: 改善案
+      description: どのファイルをどう直すか。他の製品でも当てはまる理由
+  - type: input
+    id: product
+    attributes:
+      label: 製品種別
+      placeholder: inverter / servo / plc
