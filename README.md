@@ -6,11 +6,26 @@ IEC 62443-4-1 の開発プロセスに沿って、IEC 62443-4-2 のコンポー�
 
 ## 使い方
 
-| 操作 | Claude Code | GitHub Copilot (VS Code) |
-|---|---|---|
-| 初期設定 | `/iec62443 init` | `/iec62443` に `init` |
-| issue を実装 | `/iec62443 12` または `/iec62443 standard 12` | `/iec62443` に `standard 12` |
-| 改善提案 | `/iec62443 improve` | `/iec62443` に `improve` |
+Claude Code でも GitHub Copilot (VS Code のエージェントモード) でも、チャットで同じコマンドを使う。
+
+| 操作 | コマンド |
+|---|---|
+| 初期設定 | `/iec62443 init` |
+| issue を実装 | `/iec62443 12` または `/iec62443 standard 12` |
+| 改善提案 | `/iec62443 improve` |
+| 独立レビュー | エージェント `sec-reviewer` を選ぶ (standard では自動で呼ばれる) |
+
+GitHub 上で Copilot に issue を割り当てて動かす場合は、「セキュリティ機能」テンプレートで起票する。issue に書かれたモードで同じ手順が動く。
+
+### ツールごとの読込み先
+
+| | Claude Code | Copilot (VS Code) | Copilot (GitHub 上) |
+|---|---|---|---|
+| 常時指示 | `CLAUDE.md` → `AGENTS.md` | `AGENTS.md` | `AGENTS.md` |
+| スキル | `.claude/skills/` (本体への入口) | `.github/skills/` (本体) | 両方 |
+| エージェント | `.claude/agents/` | `.github/agents/` | `.github/agents/` |
+
+手順の本体は `.github/skills/iec62443/` の 1 か所だけで、ほかは本体を指す数行のファイル。修正は本体に対して行う。
 
 ## モード
 
@@ -20,14 +35,44 @@ IEC 62443-4-1 の開発プロセスに沿って、IEC 62443-4-2 のコンポー�
 | standard | 新規のセキュリティ機能や外部インタフェースの変更。脅威分析、設計メモ、独立レビューを追加 | 中 |
 | audit | リリース前の棚卸し。4-1 の証跡と CR の充足状況の不足を一覧にする | 大 |
 
+## 目標セキュリティレベル (SL) の切替
+
+どの SL まで満たすかは、適用先プロジェクトの `.sec62443/project.yml` の `target_sl` で決まる。スキルは要件マップから、必要な SL がこの値以下の CR と強化要件 (RE) だけを選ぶ。
+
+```yaml
+target_sl: 1   # 1〜4。SL1 でよければ 1、SL2 が必要なら 2 (既定)
+```
+
+| やりたいこと | 方法 |
+|---|---|
+| 製品全体を SL1 でよいことにする | `target_sl: 1` にする |
+| 製品全体を SL2 以上にする | `target_sl: 2` (または 3、4) にする |
+| 一部の CR だけ扱いを変える | `.sec62443/rules.md` に CR、扱い、理由を 1 行で書く (下の例) |
+| 1 つの issue だけ変える | issue の本文に「この issue は SL1 で実装」のように理由付きで書く |
+
+`rules.md` の例:
+
+```
+- CR 1.1 は SL2 の RE(1) まで実装する (全体は SL1 だが、保守ツール接続は個人を特定したいため)
+- CR 2.2 は対象外 (無線インタフェースを持たないため)
+- EDR 3.14 RE(1) は次期ハードで対応。現行機は SL1 相当 (セキュアブート非対応の MCU のため)
+```
+
+注意:
+
+- `target_sl` を変えても、実装済みの機能は自動では見直されない。上げた後は `/iec62443 audit` で不足を洗い出す。
+- SL を下げる、CR を対象外にする、という判断は製品のリスク評価に基づいて人が行い、理由を残す。エージェントは `rules.md` と issue に書かれた判断に従うだけで、自分では下げない。
+
 ## 構成
 
 ```
 AGENTS.md                         両ツール共通の常時指示 (数行)
 CLAUDE.md                         AGENTS.md を取り込むだけ
-.claude/skills/iec62443/          スキル本体。SKILL.md と、モードに応じて読む references/
-.claude/agents/sec-reviewer.md    独立レビュー用エージェント
-.github/                          Copilot 用の薄いラッパー、issue / PR テンプレート
+.github/skills/iec62443/          スキル本体。SKILL.md と、モードに応じて読む references/
+.github/agents/                   Copilot 用の独立レビューエージェント
+.github/ISSUE_TEMPLATE/ ほか      issue / PR テンプレート
+.claude/skills/iec62443/          Claude Code 用の入口 (本体を指すだけ)
+.claude/agents/                   Claude Code 用の独立レビューエージェント
 ```
 
 適用先のプロジェクトで `init` を実行すると作られるもの:
