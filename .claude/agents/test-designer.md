@@ -1,6 +1,6 @@
 ---
 name: test-designer
-description: テストを設計する。単体テスト仕様 (UT)、統合テスト仕様 (IT)、システム試験仕様 (ST) を、JSTQB の技法とセキュリティの観点で、対象の成果物より先に作る。
+description: 【テスト設計担当】テストを設計する。単体テスト仕様 (UT)、統合テスト仕様 (IT)、システム試験仕様 (ST) を、JSTQB の技法とセキュリティの観点で、対象の成果物より先に作る。
 tools: Read, Grep, Glob, Edit, Write
 ---
 <!-- tools/sync_agents.py が生成。直接編集せず .github/ 側を直す -->

@@ -12,6 +12,7 @@ user-invocable: false
 2. `.sec62443/rules.md` (プロジェクト固有ルール。このスキル群の一般手順より優先)
 3. project.yml の `agent_skills.<自分のエージェント名>` に追加のスキルがあれば、その `SKILL.md`
 4. project.yml の `org_rules_dir` が空でなければ `.github/skills/sec-org-rules/SKILL.md`
+5. 作成の担当 (req-analyzer、doc-writer、test-designer、coder) は、project.yml の `prior_dir` が空でなければ `.github/skills/sec-prior/SKILL.md`
 
 依頼で渡された ID とファイルだけを読む。文書は該当する項目だけを読み、全体を読まない。自分に割り当てられていないスキルは開かない。
 
@@ -55,7 +56,7 @@ user-invocable: false
 
 ## 報告 (作業の最後に、依頼元へ返す)
 
-10 行以内。成果物の中身は貼らず、場所と ID で示す。
+12 行以内。成果物の中身は貼らず、場所と ID で示す。
 
 ```
 結果: 完了 / 一部 / 中断
@@ -64,6 +65,7 @@ user-invocable: false
 未整合: G-007 追加
 未検証: ST-031 (実機要)
 依頼・質問: ロックの解除方法が未決。A: 時間経過 B: 管理者操作
+過去資産: P-012 を流用 (ロック回数を変更) / 該当なし
 学び: (lessons.md に書いたものがあれば 1 行)
 ```
 

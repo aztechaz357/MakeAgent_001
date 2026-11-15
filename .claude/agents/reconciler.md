@@ -1,6 +1,6 @@
 ---
 name: reconciler
-description: 文書、テスト、コード、トレース表、未整合台帳のつじつまを合わせる。上流の不備や後からの追加、コード先行で生じたずれを洗い出し、直し方を提案する。
+description: 【整合担当】文書、テスト、コード、トレース表、未整合台帳のつじつまを合わせる。上流の不備や後からの追加、コード先行で生じたずれを洗い出し、直し方を提案する。
 tools: Read, Grep, Glob, Edit, Write, Bash
 ---
 <!-- tools/sync_agents.py が生成。直接編集せず .github/ 側を直す -->

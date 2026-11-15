@@ -20,6 +20,7 @@ coverage: ""             # 例: "UT ブランチ 100%"。空なら測って報�
 interfaces: []           # 例: [EtherCAT, USB, UART保守, JTAG]
 standard_docs: ""        # 規格本文の抜粋を置いたディレクトリ。使うなら .sec62443/standards
 org_rules_dir: ""        # 社内規定の索引と本文。使うなら .sec62443/org-rules
+prior_dir: ""            # 過去資産 (以前のプロジェクト、別機種) の索引。使うなら .sec62443/prior
 docs:                    # 文書の名称と場所。社内の呼び方と置き場所に合わせて変える
   REQ: {name: 製品セキュリティ要求仕様書, path: docs/security/requirements.md}
   ARC: {name: 製品セキュリティアーキテクチャ設計書, path: docs/security/architecture.md}
@@ -34,6 +35,7 @@ agent_skills: {}         # エージェントに追加で読ませるスキル�
 3. 利用者に尋ねて設定する。
    - 規格本文を参照させるか。使う場合は `standard_docs` を設定し、ディレクトリを作って `.gitignore` に追加する。置き方は `.github/skills/sec-requirements/references/standards.md` を案内する。
    - 社内規定を参照させるか。使う場合は `org_rules_dir` を設定し、見出し行だけの `index.md` を作る。git で管理するかどうかを尋ね、しない場合は `.gitignore` に追加する。登録は `org-rules add` で行うと案内する。
+   - 以前のプロジェクトや別機種の資産を参照させるか。使う場合は `prior_dir` を設定し、見出し行だけの `index.md` を作る。git で管理するかどうかを尋ね、しない場合は `.gitignore` に追加する。登録は `prior add` で行うと案内する。
    - 既にある仕様書や設計書があれば `docs` の場所をそれに合わせる。Markdown 以外 (Word、Excel) の場合は、エージェントが読み書きできる形にする方法を相談する。
 4. 見出しだけのファイルを作る: `.sec62443/rules.md` (「プロジェクト固有ルール」)、`.sec62443/lessons.md` (「学びの記録」)、`docs/security/gaps.md` (「未整合台帳」)。
 5. `docs/security/trace.csv` をヘッダだけで作る: `ID,上流,CR,テスト,実装,状態,issue,PR`

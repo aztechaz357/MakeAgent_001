@@ -1,6 +1,6 @@
 ---
 name: coder
-description: 実装する。単体テスト仕様をテストコードにし、失敗を確認してから組込み C のコードを書く (TDD)。SEI CERT C の観点で確認する。
+description: 【実装担当】実装する。単体テスト仕様をテストコードにし、失敗を確認してから組込み C のコードを書く (TDD)。SEI CERT C の観点で確認する。
 tools: Read, Grep, Glob, Edit, Write, Bash
 ---
 <!-- tools/sync_agents.py が生成。直接編集せず .github/ 側を直す -->

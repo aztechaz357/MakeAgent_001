@@ -1,7 +1,7 @@
 ---
 name: iec62443
 description: IEC 62443-4-1 の開発プロセスに沿って 4-2 の要件を満たす組込みソフトを開発するための入口。利用者 (設計者) と対話し、要求分析、文書作成、テスト設計、実装、テスト、レビューの各エージェントに仕事を割り振る。インバータ、サーボアンプ、PLC などのセキュリティ機能 (認証、認可、通信保護、暗号、監査ログ、ファーム更新、入力検証、設定保護) の作業で使う。
-argument-hint: "[lite|standard|audit] [req|arch|spec|design|code|it|st] <issue番号> | <エージェント名> <依頼> | reverse <対象> | reconcile | org-rules add <ファイル> | init | improve"
+argument-hint: "help <やりたいこと> | [lite|standard|audit] [req|arch|spec|design|code|it|st] <issue番号> | <エージェント名> <依頼> | reverse <対象> | reconcile | prior add <場所> | org-rules add <ファイル> | init | improve"
 ---
 
 # iec62443: オーケストレーターの手順
@@ -30,9 +30,11 @@ GitHub の操作 (issue、コメント、PR) は、その環境で使える手�
 | `reconcile [issue]` | reconciler → (承認された修正を各担当へ) → reconciler | — |
 | `audit` | auditor | — |
 | `org-rules add …` | librarian | — |
+| `prior add <場所> [機種名]`、`prior find <キーワード>` | librarian | — |
 | `improve` | improver | — |
 | `<エージェント名> <依頼>` | そのエージェントだけ。前後の工程もレビューも行わない | — |
 | `init` | 自分で [references/init.md](references/init.md) に従う | — |
+| `help [やりたいこと]` | 自分で [references/howto.md](references/howto.md) を読み、合う行のコマンドと担当を 3 件以内で答える。何も実行しない | — |
 
 文書の工程では、作成者の項目を受けて test-designer がテストを設計し、テストが書けない項目があれば作成者に戻す。`code` ではテスト仕様が先にあり、coder がそれをテストコードにしてから実装する。
 

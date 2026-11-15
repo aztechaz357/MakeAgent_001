@@ -1,6 +1,6 @@
 ---
 name: improver
-description: 作業で得た学びから、プロジェクト固有ルール、スキル、エージェントへのスキル割当ての改善を提案する。
+description: 【改善担当】作業で得た学びから、プロジェクト固有ルール、スキル、エージェントへのスキル割当ての改善を提案する。
 tools: Read, Grep, Glob, Edit, Write, Bash
 ---
 <!-- tools/sync_agents.py が生成。直接編集せず .github/ 側を直す -->

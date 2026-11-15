@@ -1,6 +1,6 @@
 ---
 name: coder
-description: 実装する。単体テスト仕様をテストコードにし、失敗を確認してから組込み C のコードを書く (TDD)。SEI CERT C の観点で確認する。
+description: 【実装担当】実装する。単体テスト仕様をテストコードにし、失敗を確認してから組込み C のコードを書く (TDD)。SEI CERT C の観点で確認する。
 tools: ["read", "search", "edit", "execute"]
 ---
 
