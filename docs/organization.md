@@ -7,30 +7,30 @@
 ```mermaid
 flowchart TD
     U(["利用者<br>設計者兼マネジメント"])
-    O["orchestrator<br>窓口と統率"]
+    O["orchestrator<br>統括"]
     U <-->|"依頼、決定、承認"| O
 
     subgraph MAKE["作成"]
-        RA["req-analyzer<br>要求分析"]
-        DW["doc-writer<br>設計文書"]
-        TDS["test-designer<br>テスト設計"]
-        CO["coder<br>実装"]
-        TE["tester<br>テスト実施"]
+        RA["req-analyzer<br>要求分析担当"]
+        DW["doc-writer<br>文書作成担当"]
+        TDS["test-designer<br>テスト設計担当"]
+        CO["coder<br>実装担当"]
+        TE["tester<br>テスト実施担当"]
     end
 
     subgraph REVIEW["レビュー (作成者から独立)"]
-        RR["req-reviewer"]
-        DR["doc-reviewer"]
-        TDR["test-design-reviewer"]
-        CR["code-reviewer"]
-        TR["test-reviewer"]
+        RR["req-reviewer<br>要求レビュー担当"]
+        DR["doc-reviewer<br>文書レビュー担当"]
+        TDR["test-design-reviewer<br>テスト設計レビュー担当"]
+        CR["code-reviewer<br>コードレビュー担当"]
+        TR["test-reviewer<br>テスト結果レビュー担当"]
     end
 
     subgraph SUPPORT["支援"]
-        RC["reconciler<br>整合"]
-        AU["auditor<br>監査"]
-        LI["librarian<br>規定の管理"]
-        IM["improver<br>改善"]
+        RC["reconciler<br>整合担当"]
+        AU["auditor<br>監査担当"]
+        LI["librarian<br>資料管理担当"]
+        IM["improver<br>改善担当"]
     end
 
     O --> RA & DW & TDS & CO & TE
@@ -49,25 +49,27 @@ flowchart TD
 
 ## エージェントとスキルの割当て
 
-| エージェント | sec-base | 役割のスキル | 編集できるもの |
-|---|---|---|---|
-| orchestrator | — | iec62443 | PR、初期設定 |
-| req-analyzer | ○ | sec-requirements | REQ、トレース表、台帳 |
-| doc-writer | ○ | sec-docs | ARC、FS、SWD、トレース表、台帳 |
-| test-designer | ○ | sec-test-design | UT、IT、ST の仕様、トレース表、台帳 |
-| coder | ○ | sec-coding | コード、テストコード、トレース表、台帳 |
-| tester | ○ | sec-test-exec | テスト結果、手順書、トレース表、台帳 |
-| req-reviewer | ○ | sec-review、sec-requirements | なし |
-| doc-reviewer | ○ | sec-review、sec-docs | なし |
-| test-design-reviewer | ○ | sec-review、sec-test-design | なし |
-| code-reviewer | ○ | sec-review、sec-coding | なし |
-| test-reviewer | ○ | sec-review、sec-test-exec | なし |
-| reconciler | ○ | sec-reconcile | トレース表、台帳 |
-| auditor | ○ | sec-audit、sec-reconcile | 監査結果 |
-| librarian | ○ | sec-org-rules | 規定の索引 |
-| improver | ○ | sec-improve | 固有ルール、学びの記録 |
+| エージェント | 日本語名 | sec-base | 役割のスキル | 編集できるもの |
+|---|---|---|---|---|
+| orchestrator | 統括 | — | iec62443 | PR、初期設定 |
+| req-analyzer | 要求分析担当 | ○ | sec-requirements | REQ、トレース表、台帳 |
+| doc-writer | 文書作成担当 | ○ | sec-docs | ARC、FS、SWD、トレース表、台帳 |
+| test-designer | テスト設計担当 | ○ | sec-test-design | UT、IT、ST の仕様、トレース表、台帳 |
+| coder | 実装担当 | ○ | sec-coding | コード、テストコード、トレース表、台帳 |
+| tester | テスト実施担当 | ○ | sec-test-exec | テスト結果、手順書、トレース表、台帳 |
+| req-reviewer | 要求レビュー担当 | ○ | sec-review、sec-requirements | なし |
+| doc-reviewer | 文書レビュー担当 | ○ | sec-review、sec-docs | なし |
+| test-design-reviewer | テスト設計レビュー担当 | ○ | sec-review、sec-test-design | なし |
+| code-reviewer | コードレビュー担当 | ○ | sec-review、sec-coding | なし |
+| test-reviewer | テスト結果レビュー担当 | ○ | sec-review、sec-test-exec | なし |
+| reconciler | 整合担当 | ○ | sec-reconcile | トレース表、台帳 |
+| auditor | 監査担当 | ○ | sec-audit、sec-reconcile | 監査結果 |
+| librarian | 資料管理担当 | ○ | sec-org-rules、sec-prior | 規定と過去資産の索引 |
+| improver | 改善担当 | ○ | sec-improve | 固有ルール、学びの記録 |
 
-`sec-org-rules` は、`project.yml` の `org_rules_dir` が設定されているときに全エージェントが読む。
+`sec-org-rules` は、`project.yml` の `org_rules_dir` が設定されているときに全エージェントが読む。`sec-prior` は、`prior_dir` が設定されているときに作成の担当 (req-analyzer、doc-writer、test-designer、coder) が読む。
+
+何をしたいときに誰に任せるかは [逆引き辞典](../.github/skills/iec62443/references/howto.md) の「誰に任せるか」を参照。
 
 ### 割当てを変える
 

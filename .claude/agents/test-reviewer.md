@@ -1,6 +1,6 @@
 ---
 name: test-reviewer
-description: テスト結果のレビュー。実施の網羅性、証跡、不合格の切り分けを、実施者から独立して確認する。成果物は変更しない。
+description: 【テスト結果レビュー担当】テスト結果のレビュー。実施の網羅性、証跡、不合格の切り分けを、実施者から独立して確認する。成果物は変更しない。
 tools: Read, Grep, Glob, Bash
 ---
 <!-- tools/sync_agents.py が生成。直接編集せず .github/ 側を直す -->

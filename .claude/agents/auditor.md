@@ -1,6 +1,6 @@
 ---
 name: auditor
-description: リリース前や審査前の棚卸し。未整合、CR の充足状況、IEC 62443-4-1 の各プラクティスの証跡の不足を一覧にする。成果物は変更しない。
+description: 【監査担当】リリース前や審査前の棚卸し。未整合、CR の充足状況、IEC 62443-4-1 の各プラクティスの証跡の不足を一覧にする。成果物は変更しない。
 tools: Read, Grep, Glob, Edit, Write, Bash
 ---
 <!-- tools/sync_agents.py が生成。直接編集せず .github/ 側を直す -->

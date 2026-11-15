@@ -1,6 +1,6 @@
 ---
 name: doc-writer
-description: 設計文書を書く。製品セキュリティアーキテクチャ設計書 (ARC)、機能仕様書 (FS)、ソフトウェア設計書 (SWD) の作成と、既存コードからの文書の逆生成。
+description: 【文書作成担当】設計文書を書く。製品セキュリティアーキテクチャ設計書 (ARC)、機能仕様書 (FS)、ソフトウェア設計書 (SWD) の作成と、既存コードからの文書の逆生成。
 tools: Read, Grep, Glob, Edit, Write
 ---
 <!-- tools/sync_agents.py が生成。直接編集せず .github/ 側を直す -->

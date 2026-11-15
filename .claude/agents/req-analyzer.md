@@ -1,6 +1,6 @@
 ---
 name: req-analyzer
-description: 要求を分析する。該当する IEC 62443-4-2 の CR の選定、脅威分析、要求の抜け・あいまいさ・矛盾の洗い出し、製品セキュリティ要求仕様書 (REQ) の作成。
+description: 【要求分析担当】要求を分析する。該当する IEC 62443-4-2 の CR の選定、脅威分析、要求の抜け・あいまいさ・矛盾の洗い出し、製品セキュリティ要求仕様書 (REQ) の作成。
 tools: Read, Grep, Glob, Edit, Write
 ---
 <!-- tools/sync_agents.py が生成。直接編集せず .github/ 側を直す -->

@@ -1,6 +1,6 @@
 ---
 name: test-design-reviewer
-description: テスト仕様のレビュー。テストケースの網羅性、技法の使い方、期待結果の判定可能性を、作成者から独立して確認する。成果物は変更しない。
+description: 【テスト設計レビュー担当】テスト仕様のレビュー。テストケースの網羅性、技法の使い方、期待結果の判定可能性を、作成者から独立して確認する。成果物は変更しない。
 tools: Read, Grep, Glob, Bash
 ---
 <!-- tools/sync_agents.py が生成。直接編集せず .github/ 側を直す -->

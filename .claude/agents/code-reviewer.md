@@ -1,6 +1,6 @@
 ---
 name: code-reviewer
-description: コードのレビュー。設計との対応、SEI CERT C の観点、セキュリティ機能を弱める変更の有無を、実装者から独立して確認する。成果物は変更しない。
+description: 【コードレビュー担当】コードのレビュー。設計との対応、SEI CERT C の観点、セキュリティ機能を弱める変更の有無を、実装者から独立して確認する。成果物は変更しない。
 tools: Read, Grep, Glob, Bash
 ---
 <!-- tools/sync_agents.py が生成。直接編集せず .github/ 側を直す -->

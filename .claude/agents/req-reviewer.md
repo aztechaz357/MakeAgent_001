@@ -1,6 +1,6 @@
 ---
 name: req-reviewer
-description: 要求仕様のレビュー。CR の選定の漏れ、要求の検証可能性、脅威への対応を、作成者から独立して確認する。成果物は変更しない。
+description: 【要求レビュー担当】要求仕様のレビュー。CR の選定の漏れ、要求の検証可能性、脅威への対応を、作成者から独立して確認する。成果物は変更しない。
 tools: Read, Grep, Glob, Bash
 ---
 <!-- tools/sync_agents.py が生成。直接編集せず .github/ 側を直す -->

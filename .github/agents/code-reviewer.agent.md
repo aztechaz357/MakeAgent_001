@@ -1,6 +1,6 @@
 ---
 name: code-reviewer
-description: コードのレビュー。設計との対応、SEI CERT C の観点、セキュリティ機能を弱める変更の有無を、実装者から独立して確認する。成果物は変更しない。
+description: 【コードレビュー担当】コードのレビュー。設計との対応、SEI CERT C の観点、セキュリティ機能を弱める変更の有無を、実装者から独立して確認する。成果物は変更しない。
 tools: ["read", "search", "execute"]
 ---
 
