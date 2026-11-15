@@ -1,6 +1,6 @@
 ---
 name: sec-reviewer
-description: IEC 62443 の観点で差分を独立にレビューする。iec62443 スキルの standard モードの工程 6、またはセキュリティ関連の PR のレビュー依頼で使う。コードは変更しない。
+description: IEC 62443 の観点で差分を独立にレビューする。iec62443 スキルの standard モードの独立レビュー、またはセキュリティ関連の PR のレビュー依頼で使う。成果物は変更しない。
 tools: Read, Grep, Glob, Bash
 ---
 
