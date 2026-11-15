@@ -1,19 +1,36 @@
 name: セキュリティ機能
-description: IEC 62443-4-2 の要件に関わる機能の追加・変更
+description: IEC 62443-4-2 の要件に関わる文書作成、実装、試験
 labels: []
 body:
   - type: textarea
     id: goal
     attributes:
       label: 実現したいこと
-      description: 何を、どのインタフェースで、誰から守るか
+      description: 何を、どのインタフェースで、誰から守るか。上流の項目 ID が分かれば書く
+    validations:
+      required: true
+  - type: dropdown
+    id: stage
+    attributes:
+      label: 工程
+      description: どこから始めてもよい。上流の文書がなければ未整合台帳に記録して進む
+      options:
+        - req (要求仕様書)
+        - arch (アーキテクチャ設計書)
+        - spec (機能仕様書)
+        - design (ソフトウェア設計書)
+        - code (実装と単体テスト)
+        - it (統合テスト)
+        - st (システム試験)
+        - reverse (既存コードから文書を起こす)
+        - reconcile (整合)
     validations:
       required: true
   - type: dropdown
     id: mode
     attributes:
       label: モード
-      description: 新しい外部インタフェース、鍵、更新経路に触れるなら standard。Copilot に issue を割り当てた場合もこのモードで動く
+      description: 新しい外部インタフェース、鍵、更新経路に触れるなら standard。Copilot に issue を割り当てた場合もこのモードと工程で動く
       options:
         - lite
         - standard
@@ -28,4 +45,4 @@ body:
     id: constraints
     attributes:
       label: 制約
-      description: 制御周期、メモリ、互換性、機能安全との関係など
+      description: 制御周期、メモリ、互換性、機能安全との関係、SL の例外など
