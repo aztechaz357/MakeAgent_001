@@ -32,7 +32,7 @@ lite で始めても、次のどれかに当たると分かった時点で stand
 ## 工程 (括弧内は 4-1 のプラクティス)
 
 1. **準備**: issue を読む (既に文脈にあれば読み直さない)。`.sec62443/project.yml` と `.sec62443/rules.md` を読む。作業ブランチが環境から与えられていればそれを使い、なければ `feature/<番号>-<要約>` を作る。
-2. **要件 (SR)**: [references/cr-map.md](references/cr-map.md) から該当 CR を選び、`target_sl` で必要な RE まで含める。`rules.md` や issue に CR ごとの SL の例外や対象外の指定があればそれに従い、自分の判断で SL を下げたり CR を外したりしない。CR ごとに検証可能な受入基準を 1〜3 行で書き、issue にコメントする。該当 CR がないと判断したらその理由を書く。
+2. **要件 (SR)**: [references/cr-map.md](references/cr-map.md) から該当 CR を選び、project.yml の `standard_docs` が空でなければ [references/standards.md](references/standards.md) に従ってその CR の本文も読む。`target_sl` で必要な RE まで含める。`rules.md` や issue に CR ごとの SL の例外や対象外の指定があればそれに従い、自分の判断で SL を下げたり CR を外したりしない。CR ごとに検証可能な受入基準を 1〜3 行で書き、issue にコメントする。該当 CR がないと判断したらその理由を書く。
 3. **設計 (SD)** — standard のみ: [references/standard.md](references/standard.md) に従い脅威と設計判断を記録する。
 4. **実装 (SI)**: 実装する。変更した関数ごとに [references/cert-c.md](references/cert-c.md) の観点を確認する。暗号は自作せず、project.yml の `crypto_lib` を使う。制御周期や割込み応答に影響する変更は影響の見積りを残す。
 5. **検証 (SVV)**: 受入基準 1 つにつき最低 1 つ、正常系と拒否される側のテストを書いて実行する。実機でしか確認できない項目は「未検証 (実機要)」と明記する。standard では standard.md の追加試験も行う。

@@ -17,7 +17,10 @@ crypto_lib: ""           # 例: Mbed TLS。空なら暗号実装の前に確認�
 static_analysis: ""      # 実行コマンド。空なら省略
 test_command: ""         # ホスト上の単体テストの実行コマンド
 interfaces: []           # 例: [EtherCAT, USB, UART保守, JTAG]
+standard_docs: ""        # 規格本文の抜粋を置いたディレクトリ。使うなら .sec62443/standards
 ```
+
+   規格本文を参照させるかを利用者に尋ねる。使う場合は `standard_docs` を設定し、そのディレクトリを作って `.gitignore` に追加する (既にあれば追加しない)。ファイルの置き方は [standards.md](standards.md) を案内する。本文のファイルは利用者が置く。
 
 3. `.sec62443/rules.md` を見出しだけで作る (「プロジェクト固有ルール」)。
 4. `.sec62443/lessons.md` を見出しだけで作る (「学びの記録」)。形式は `- <日付> #<issue> <起きたこと> → <次からどうするか>`。
