@@ -25,4 +25,4 @@ user-invocable: false
 
    `standard_docs` が設定されていれば、`.github/skills/sec-requirements/references/standards.md` に従い該当プラクティスの本文を読んで判定の根拠にする。`org_rules_dir` が設定されていれば、索引の各規定が求める成果物と記録の有無も確認する。
 
-4. 不足ごとに issue の下書きを提示し、起票するかを確認する。
+4. 不足ごとにチケット (issue) の下書きを報告に含める。起票は依頼元が利用者に確認して行う。

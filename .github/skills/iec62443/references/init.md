@@ -10,6 +10,11 @@ product: inverter        # inverter | servo | plc
 component_type: embedded # 4-2 の種別
 target_sl: 2             # SL-C 1〜4
 default_mode: lite       # lite | standard | audit
+tracker: github          # チケットの置き場所。github | redmine | manual
+redmine_url: ""          # 例: https://redmine.example.co.jp (tracker: redmine のとき)
+redmine_project: ""      # Redmine のプロジェクト識別子
+redmine_api_key_env: REDMINE_API_KEY   # API キーを入れておく環境変数の名前 (キーそのものは書かない)
+redmine_format: markdown # Redmine の書式。markdown | textile
 language: C
 coding_standard: CERT C
 mcu_rtos: ""             # 例: RX72M / FreeRTOS
@@ -33,6 +38,7 @@ agent_skills: {}         # エージェントに追加で読ませるスキル�
 ```
 
 3. 利用者に尋ねて設定する。
+   - チケットをどこで管理するか (GitHub / Redmine / どちらにも接続しない)。Redmine の場合は URL とプロジェクト識別子を設定し、API キーは利用者が自分で環境変数に入れるよう案内する (キーを尋ねない)。`python tools/redmine.py list` が通るかを確かめ、通らなければ原因を伝えて `manual` にするかを尋ねる。`manual` の場合は `.sec62443/outbox/` を `.gitignore` に追加する。チケットの雛形 (`.github/skills/iec62443/references/tracker.md` の「チケットの書き方」) を Redmine に登録するよう案内する。
    - 規格本文を参照させるか。使う場合は `standard_docs` を設定し、ディレクトリを作って `.gitignore` に追加する。置き方は `.github/skills/sec-requirements/references/standards.md` を案内する。
    - 社内規定を参照させるか。使う場合は `org_rules_dir` を設定し、見出し行だけの `index.md` を作る。git で管理するかどうかを尋ね、しない場合は `.gitignore` に追加する。登録は `org-rules add` で行うと案内する。
    - 以前のプロジェクトや別機種の資産を参照させるか。使う場合は `prior_dir` を設定し、見出し行だけの `index.md` を作る。git で管理するかどうかを尋ね、しない場合は `.gitignore` に追加する。登録は `prior add` で行うと案内する。

@@ -1,6 +1,6 @@
 # 逆引き辞典: やりたいことから引く
 
-チャットで `/iec62443 help <やりたいこと>` と打っても引ける。`12` は issue 番号の例。モード (`lite` / `standard`) を付けないと既定のモードで動く。
+チャットで `/iec62443 help <やりたいこと>` と打っても引ける。`12` は issue (Redmine ならチケット) の番号の例。モード (`lite` / `standard`) を付けないと既定のモードで動く。
 
 ## 誰に任せるか
 
@@ -92,6 +92,8 @@
 
 | やりたいこと | 方法 |
 |---|---|
+| GitHub ではなく Redmine のチケットで進めたい | `.sec62443/project.yml` の `tracker: redmine` と `redmine_url`、`redmine_project`。API キーは環境変数 `REDMINE_API_KEY` に自分で入れる |
+| チケットシステムに接続できない環境で使いたい | `tracker: manual`。チケットの本文を貼って渡し、書き込む内容は `.sec62443/outbox/` から転記する |
 | SL1 でよいことにする、SL を上げる | `.sec62443/project.yml` の `target_sl` |
 | 一部の CR だけ扱いを変える、対象外にする | `.sec62443/rules.md` に CR、扱い、理由を 1 行 |
 | いつものモードを変える | `project.yml` の `default_mode` |
@@ -115,4 +117,5 @@
 | 作業の流れを図で見たい | `docs/organization.md` のシーケンス図 |
 | 項目どうしの対応を見たい | `docs/security/trace.csv` |
 | Copilot と Claude Code の違いを知りたい | `docs/guide.md` の「ツールごとの読込み先」 |
+| Redmine につながらない | `python tools/redmine.py list` のメッセージを見る。REST API は Redmine の管理者が有効にする必要がある |
 | 「独立レビュー未実施」と PR に書かれた | サブエージェントを呼べない環境だった。reviewer を直接選んで頼む |
